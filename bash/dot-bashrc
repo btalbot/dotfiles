@@ -1,0 +1,85 @@
+alias emacs='open -a Emacs.app'
+alias openssl=/usr/local/opt/openssl@1.1/bin/openssl
+alias curl=/usr/local/opt/curl/bin/curl
+#alias emacsclient=/Applications/Emacs.app/Contents/MacOS/bin/emacsclient
+#alias 6666="ssh -i ~/age/aws-keys/btalbot.pem -o StrictHostKeyChecking=no -o ConnectTimeout=10 -o ServerAliveInterval=60 -N -D 6666 root@ec2-174-129-103-90.compute-1.amazonaws.com"
+alias socat_statsd="socat -u udp-recv:8125 stdout"
+alias utc='TZ=utc date "+%Y-%m-%dT%H:%M:%S.000Z"'
+alias uuid='uuid -v 4'
+alias nemo.aws="AWS_ACCESS_KEY_ID=FakeKey AWS_SECRET_ACCESS_KEY=FakeSecret /usr/local/opt/awscli/bin/aws"
+alias nemo.aws.dynamodb="nemo.aws dynamodb --endpoint http://dynamodb.nemo"
+
+# dirs for AWS command line tools
+#export EC2_HOME=/usr/local/Cellar/ec2-api-tools/1.7.1.0/libexec
+
+#export JAVA_HOME=/Library/Java/JavaVirtualMachines/CurrentJDK/Contents/Home
+export HISTFILESIZE=5000
+
+#export HOMEBREW_GITHUB_API_TOKEN=
+
+ulimit -n 2048
+
+# function imsgme - iMessageMe; send myself an iMessage
+function imsgme
+{
+    msg=$1
+    osascript -e "tell application \"Messages\" to send \"$msg\" to buddy \"Bryan Talbot\""
+}
+
+# function scn - run screen on a remote host using ssh
+function scn
+{
+    host=$1
+    ssh -t $host screen -D -R
+}
+
+# function tlscli - start openssl client to a remote server
+function tlscli
+{
+  openssl s_client -connect $1:443 -servername $1 "${@:2}"
+}
+#alias scli=tlscli
+
+function pretty-jwt
+{
+  ruby -rjson -rjwt -e "JWT.decode(ARGF.read, nil, false).reverse.each { |j| jj j }" | jq .
+}
+
+function mygrants()
+{
+  mysql -B -N $@ -e "SELECT DISTINCT CONCAT(
+    'SHOW GRANTS FOR ''', user, '''@''', host, ''';'
+    ) AS query FROM mysql.user" | \
+  mysql $@ | \
+  sed 's/\(GRANT .*\)/\1;/;s/^\(Grants for .*\)/## \1 ##/;/##/{x;p;x;}'
+}
+
+
+# stolen from http://www.jayway.com/2014/01/15/how-to-switch-jdk-version-on-mac-os-x-maverick/
+function setjdk() {
+    if [ $# -ne 0 ]; then
+        removeFromPath '/System/Library/Frameworks/JavaVM.framework/Home/bin'
+        if [ -n "${JAVA_HOME+x}" ]; then
+            removeFromPath $JAVA_HOME
+        fi
+        export JAVA_HOME=$(/usr/libexec/java_home -v $@)
+        export PATH=$JAVA_HOME/bin:$PATH
+    fi
+}
+function removeFromPath() {
+    export PATH=$(echo $PATH | sed -E -e "s;:$1;;" -e "s;$1:?;;")
+}
+#setjdk 1.7
+
+export MINIKUBE_DRIVER=hyperkit
+export NEMO_USE_ISTIO=yes
+
+# settings for aws-vault https://github.com/99designs/aws-vault
+export AWS_VAULT_KEYCHAIN_NAME=login
+export AWS_SESSION_TOKEN_TTL=8h
+function aws()
+{
+  aws-vault exec ${AWS_PROFILE:-$USER} -- aws "$@"
+}
+
+. "$HOME/.cargo/env"
