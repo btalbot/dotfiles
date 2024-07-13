@@ -1,22 +1,20 @@
 [user]
 	name = Bryan Talbot
-	email = bryan.talbot@ijji.com
+	email = batalbot@gmail.com
 [core]
 	excludesfile = /Users/btalbot/.gitignore_global
 [color]
 	ui = auto
 [push]
 	default = simple
-[filter "lfs"]
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	required = true
-	process = git-lfs filter-process
 [commit]
-	template = /Users/btalbot/.stCommitMsg
+	gpgsign = true
 [gpg]
 	program = gpg
 [init]
 	defaultBranch = master
 [credential]
 	helper = /usr/local/share/gcm-core/git-credential-manager
+
+[includeIf "hasconfig:remote.*.url:git@github.com:iJJi/**"]
+	path = ~/fingershock/project/ijji/_gitconfig
