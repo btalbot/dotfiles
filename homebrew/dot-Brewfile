@@ -1,0 +1,9 @@
+brew "git"
+brew "stow"
+cask "font-hack-nerd-font"
+brew "neovim"
+brew "bash"
+brew "bash-completion"
+brew "tmux"
+brew "ripgrep"
+

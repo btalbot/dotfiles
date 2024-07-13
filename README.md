@@ -5,7 +5,9 @@ Checkout this git repository into a suitable directory.  Using ~/dotfiles
 seems pretty common and that works for me.
 
 ```
-git clone 
+mkdir ~/dotfile
+cd ~/dotfiles
+git clone git@github.com:btalbot/dotfiles.git .
 ```
 
 
@@ -31,6 +33,8 @@ For example, to copy the emacs package into the proper structure under $HOME
 
 ```
 cd ~/dotfiles
-stow --verbose --dotfiles --target ~ emacs
+stow --verbose --dotfiles --no-folding --target ~ emacs
 ```
+
+or use the `install` and `uninstall` scripts in the dotfile directory.
 

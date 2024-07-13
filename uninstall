@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+stow --verbose --dotfiles --no-folding --delete --target ~ $1
+

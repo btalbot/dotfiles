@@ -13,9 +13,7 @@ alias nemo.aws.dynamodb="nemo.aws dynamodb --endpoint http://dynamodb.nemo"
 #export EC2_HOME=/usr/local/Cellar/ec2-api-tools/1.7.1.0/libexec
 
 #export JAVA_HOME=/Library/Java/JavaVirtualMachines/CurrentJDK/Contents/Home
-export HISTFILESIZE=5000
-
-#export HOMEBREW_GITHUB_API_TOKEN=
+export HISTSIZE=10000
 
 ulimit -n 2048
 
@@ -82,4 +80,6 @@ function aws()
   aws-vault exec ${AWS_PROFILE:-$USER} -- aws "$@"
 }
 
-. "$HOME/.cargo/env"
+
+[ -f /usr/local/bin/starship ] && eval "$(/usr/local/bin/starship init bash)"
+

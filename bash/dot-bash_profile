@@ -54,4 +54,3 @@ eval "$(nodenv init -)"
 # for goenv https://github.com/go-nv/goenv
 eval "$(goenv init -)"
 
-. "$HOME/.cargo/env"
