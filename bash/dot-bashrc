@@ -24,7 +24,6 @@ export PAGER=less
 export BASH_SILENCE_DEPRECATION_WARNING=1 # https://support.apple.com/en-us/HT208050
 
 ulimit -n 2048
-
 # function imsgme - iMessageMe; send myself an iMessage
 function imsgme
 {
@@ -125,4 +124,6 @@ eval "$(nodenv init -)"
 
 # for goenv https://github.com/go-nv/goenv
 eval "$(goenv init -)"
+
+[ -f /usr/local/etc/bash_completion ] && source /usr/local/etc/bash_completion
 
