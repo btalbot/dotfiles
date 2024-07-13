@@ -1,6 +1,6 @@
-alias emacs='open -a Emacs.app'
 alias openssl=/usr/local/opt/openssl@1.1/bin/openssl
 alias curl=/usr/local/opt/curl/bin/curl
+#alias emacs='open -a Emacs.app'
 #alias emacsclient=/Applications/Emacs.app/Contents/MacOS/bin/emacsclient
 #alias 6666="ssh -i ~/age/aws-keys/btalbot.pem -o StrictHostKeyChecking=no -o ConnectTimeout=10 -o ServerAliveInterval=60 -N -D 6666 root@ec2-174-129-103-90.compute-1.amazonaws.com"
 alias socat_statsd="socat -u udp-recv:8125 stdout"
@@ -8,12 +8,20 @@ alias utc='TZ=utc date "+%Y-%m-%dT%H:%M:%S.000Z"'
 alias uuid='uuid -v 4'
 alias nemo.aws="AWS_ACCESS_KEY_ID=FakeKey AWS_SECRET_ACCESS_KEY=FakeSecret /usr/local/opt/awscli/bin/aws"
 alias nemo.aws.dynamodb="nemo.aws dynamodb --endpoint http://dynamodb.nemo"
+alias more=less
+alias v='ls -lF'
+alias vv='ls -alF'
+alias d='ls -F'
+alias ll='ls -lF'
+# Find In Files
+alias fif="find . -type f \( -not -path '*/.*/*' -a -not -name '*~' \) -print0 |xargs -0 egrep --color -n"
 
-# dirs for AWS command line tools
-#export EC2_HOME=/usr/local/Cellar/ec2-api-tools/1.7.1.0/libexec
-
-#export JAVA_HOME=/Library/Java/JavaVirtualMachines/CurrentJDK/Contents/Home
+IGNOREEOF=10  # Ctl-D 10 times before shell exit
 export HISTSIZE=10000
+export LESS="-eiM --RAW-CONTROL-CHARS --quit-if-one-screen --no-init"
+export PAGER=less
+[ -n "$(which nvim)" ] && export VISUAL=nvim
+export BASH_SILENCE_DEPRECATION_WARNING=1 # https://support.apple.com/en-us/HT208050
 
 ulimit -n 2048
 
@@ -43,30 +51,29 @@ function pretty-jwt
   ruby -rjson -rjwt -e "JWT.decode(ARGF.read, nil, false).reverse.each { |j| jj j }" | jq .
 }
 
-function mygrants()
-{
-  mysql -B -N $@ -e "SELECT DISTINCT CONCAT(
-    'SHOW GRANTS FOR ''', user, '''@''', host, ''';'
-    ) AS query FROM mysql.user" | \
-  mysql $@ | \
-  sed 's/\(GRANT .*\)/\1;/;s/^\(Grants for .*\)/## \1 ##/;/##/{x;p;x;}'
-}
-
-
-# stolen from http://www.jayway.com/2014/01/15/how-to-switch-jdk-version-on-mac-os-x-maverick/
-function setjdk() {
-    if [ $# -ne 0 ]; then
-        removeFromPath '/System/Library/Frameworks/JavaVM.framework/Home/bin'
-        if [ -n "${JAVA_HOME+x}" ]; then
-            removeFromPath $JAVA_HOME
-        fi
-        export JAVA_HOME=$(/usr/libexec/java_home -v $@)
-        export PATH=$JAVA_HOME/bin:$PATH
-    fi
-}
-function removeFromPath() {
-    export PATH=$(echo $PATH | sed -E -e "s;:$1;;" -e "s;$1:?;;")
-}
+# these used to be handy I guess
+#function mygrants()
+#{
+#  mysql -B -N $@ -e "SELECT DISTINCT CONCAT(
+#    'SHOW GRANTS FOR ''', user, '''@''', host, ''';'
+#    ) AS query FROM mysql.user" | \
+#  mysql $@ | \
+#  sed 's/\(GRANT .*\)/\1;/;s/^\(Grants for .*\)/## \1 ##/;/##/{x;p;x;}'
+#}
+## stolen from http://www.jayway.com/2014/01/15/how-to-switch-jdk-version-on-mac-os-x-maverick/
+#function setjdk() {
+#    if [ $# -ne 0 ]; then
+#        removeFromPath '/System/Library/Frameworks/JavaVM.framework/Home/bin'
+#        if [ -n "${JAVA_HOME+x}" ]; then
+#            removeFromPath $JAVA_HOME
+#        fi
+#        export JAVA_HOME=$(/usr/libexec/java_home -v $@)
+#        export PATH=$JAVA_HOME/bin:$PATH
+#    fi
+#}
+#function removeFromPath() {
+#    export PATH=$(echo $PATH | sed -E -e "s;:$1;;" -e "s;$1:?;;")
+#}
 #setjdk 1.7
 
 export MINIKUBE_DRIVER=hyperkit
@@ -81,5 +88,41 @@ function aws()
 }
 
 
-[ -f /usr/local/bin/starship ] && eval "$(/usr/local/bin/starship init bash)"
+
+if [ -f /usr/local/bin/starship ]; then
+    eval "$(/usr/local/bin/starship init bash)"
+else
+    case $TERM in
+        cons25)
+            PS1="\u@\h:\w\\$ "
+            ;;
+        *)
+            PS1="\[\033]0;\u@\h:\w\007\]\\h:\\W\\$ "
+            ;;
+    esac
+fi
+
+case `uname -s` in
+    Darwin)
+    export PATH=/usr/local/bin:/usr/local/sbin:$PATH
+    # enable colorized 'ls' output in OSX
+    export CLICOLOR=y
+    ;;
+    Linux)
+    export PATH=/usr/local/bin:/usr/local/sbin:/sbin:/usr/sbin:$PATH
+    #export LC_ALL=en_US.utf8
+    ;;
+esac
+
+# for rbenv https://github.com/sstephenson/rbenv
+eval "$(rbenv init -)"
+
+# for pyenv https://github.com/pyenv/pyenv
+eval "$(pyenv init -)"
+
+# for nodenv https://github.com/nodenv/nodenv
+eval "$(nodenv init -)"
+
+# for goenv https://github.com/go-nv/goenv
+eval "$(goenv init -)"
 
