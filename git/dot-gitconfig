@@ -1,0 +1,22 @@
+[user]
+	name = Bryan Talbot
+	email = bryan.talbot@ijji.com
+[core]
+	excludesfile = /Users/btalbot/.gitignore_global
+[color]
+	ui = auto
+[push]
+	default = simple
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	required = true
+	process = git-lfs filter-process
+[commit]
+	template = /Users/btalbot/.stCommitMsg
+[gpg]
+	program = gpg
+[init]
+	defaultBranch = master
+[credential]
+	helper = /usr/local/share/gcm-core/git-credential-manager
