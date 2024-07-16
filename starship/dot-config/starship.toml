@@ -21,7 +21,8 @@ truncation_symbol = "…/"
 truncate_to_repo = false
 
 [git_branch]
-format = "\\([$branch]($style)\\) "
+# format = "\\([$branch]($style)\\) "
+# ignore_branches = ["master","main"]
 style = "dimmed white"
 disabled = false
 
