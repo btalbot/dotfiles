@@ -24,17 +24,15 @@ brew install stow
 ## stow a package
 
 A _package_ to stow is just the collection of source files.  The default
-stow action is to copy the package files to the target directory (which
-defaults to the parent dir from which stow is executed)
+stow action is to symlink the package files to the target directory (which
+defaults to the parent dir from which stow is executed).
 
-To stow a package is to install it where needed for the app.  
-
-For example, to copy the emacs package into the proper structure under $HOME
+For example, to install the emacs package files into their proper symlinks 
+under $HOME
 
 ```
 cd ~/dotfiles
 stow --verbose --dotfiles --no-folding --target ~ emacs
 ```
 
-or use the `install` and `uninstall` scripts in the dotfile directory.
-
+or use the `install` (and `uninstall`) scripts in the dotfile directory.
