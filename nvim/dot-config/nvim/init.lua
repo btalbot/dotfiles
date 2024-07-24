@@ -1,3 +1,5 @@
+-- https://github.com/dam9000/kickstart-modular.nvim
+
 --[[
 
 =====================================================================
@@ -92,7 +94,7 @@ vim.g.maplocalleader = " "
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
-vim.o.guifont = "MeslLGS_Nerd_Font_Mono:h16"
+vim.o.guifont = "MesloLGS_Nerd_Font_Mono:h16"
 --vim.o.guifont = '*'  -- font picker
 
 -- [[ Setting options ]]
