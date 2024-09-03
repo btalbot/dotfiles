@@ -1,0 +1,11 @@
+# This file is conditionally sourced by ~/.gitconfig for ijji repos
+[user]
+	email = bryan.talbot@ijji.com
+	signingkey = bryan.talbot@ijji.com
+
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	required = true
+	process = git-lfs filter-process
+

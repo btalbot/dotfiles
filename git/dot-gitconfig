@@ -15,6 +15,11 @@
 	defaultBranch = master
 [credential]
 	helper = /usr/local/share/gcm-core/git-credential-manager
-
 [includeIf "hasconfig:remote.*.url:git@github.com:iJJi/**"]
-	path = ~/fingershock/project/ijji/_gitconfig
+	path = ~/.gitconfig_ijji
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
