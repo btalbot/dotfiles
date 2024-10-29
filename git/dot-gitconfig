@@ -13,8 +13,6 @@
 	program = gpg
 [init]
 	defaultBranch = master
-[includeIf "hasconfig:remote.*.url:git@github.com:iJJi/**"]
-	path = ~/.gitconfig_ijji
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 	path = 
@@ -23,5 +21,11 @@
 	trustExitCode = true
 [credential]
 	helper = /usr/local/share/gcm-core/git-credential-manager
-[safe]
-	bareRepository = explicit
+#[safe]
+# bundler does not work with bareRepository=explicit
+# https://github.com/rubygems/rubygems/issues?q=is%3Aissue+is%3Aopen+safe.bareRepository
+#	bareRepository = explicit
+
+# include this last to allow previous values to be over-ridden
+[includeIf "hasconfig:remote.*.url:git@github.com:iJJi/**"]
+	path = ~/.gitconfig_ijji
