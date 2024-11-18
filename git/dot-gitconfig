@@ -21,10 +21,10 @@
 	trustExitCode = true
 [credential]
 	helper = /usr/local/share/gcm-core/git-credential-manager
-#[safe]
+[safe]
 # bundler does not work with bareRepository=explicit
 # https://github.com/rubygems/rubygems/issues?q=is%3Aissue+is%3Aopen+safe.bareRepository
-#	bareRepository = explicit
+	bareRepository = all
 
 # include this last to allow previous values to be over-ridden
 [includeIf "hasconfig:remote.*.url:git@github.com:iJJi/**"]
