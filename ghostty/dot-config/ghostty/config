@@ -1,0 +1,7 @@
+font-family = "MesloLGS Nerd Font Mono"
+font-size = 14
+
+theme = "iTerm2 Pastel Dark Background"
+#theme = "iTerm2 Dark Background"
+
+copy-on-select = true
