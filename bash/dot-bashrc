@@ -5,7 +5,7 @@ alias curl=/usr/local/opt/curl/bin/curl
 #alias 6666="ssh -i ~/age/aws-keys/btalbot.pem -o StrictHostKeyChecking=no -o ConnectTimeout=10 -o ServerAliveInterval=60 -N -D 6666 root@ec2-174-129-103-90.compute-1.amazonaws.com"
 alias socat_statsd="socat -u udp-recv:8125 stdout"
 alias utc='TZ=utc date "+%Y-%m-%dT%H:%M:%S.000Z"'
-alias uuid='uuid -v 4'
+alias uuid='/usr/local/bin/uuid -v 4'
 alias nemo.aws="AWS_ACCESS_KEY_ID=FakeKey AWS_SECRET_ACCESS_KEY=FakeSecret /usr/local/opt/awscli/bin/aws"
 alias nemo.aws.dynamodb="nemo.aws dynamodb --endpoint http://dynamodb.nemo"
 alias more=less
@@ -24,6 +24,18 @@ export PAGER=less
 export BASH_SILENCE_DEPRECATION_WARNING=1 # https://support.apple.com/en-us/HT208050
 
 ulimit -n 2048
+
+# function awscurl - sign curl requests with aws-sigv4
+function awscurl
+{
+    aws-vault exec "${AWS_PROFILE:-$USER}" -- curl \
+        --aws-sigv4 "aws:amz:${AWS_REGION:-us-east-1}:${SERVICE:-es}" \
+        --variable "%AWS_ACCESS_KEY_ID" --variable "%AWS_SECRET_ACCESS_KEY" --variable "%AWS_SESSION_TOKEN" \
+        --expand-user "{{AWS_ACCESS_KEY_ID}}:{{AWS_SECRET_ACCESS_KEY}}" \
+        --expand-header "x-amz-security-token: {{AWS_SESSION_TOKEN}}" \
+        "$@"
+}
+
 # function imsgme - iMessageMe; send myself an iMessage
 function imsgme
 {
