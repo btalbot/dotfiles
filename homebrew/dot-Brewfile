@@ -6,4 +6,5 @@ brew "bash"
 brew "bash-completion"
 brew "tmux"
 brew "ripgrep"
-
+cask "ghostty"
+brew "gnupg"

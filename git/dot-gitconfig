@@ -13,14 +13,6 @@
 	program = gpg
 [init]
 	defaultBranch = master
-[difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path = 
-[mergetool "sourcetree"]
-	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
-[credential]
-	helper = /usr/local/share/gcm-core/git-credential-manager
 [safe]
 # bundler does not work with bareRepository=explicit
 # https://github.com/rubygems/rubygems/issues?q=is%3Aissue+is%3Aopen+safe.bareRepository
@@ -29,3 +21,8 @@
 # include this last to allow previous values to be over-ridden
 [includeIf "hasconfig:remote.*.url:git@github.com:iJJi/**"]
 	path = ~/.gitconfig_ijji
+[credential "https://dev.azure.com"]
+	useHttpPath = true
+[credential]
+	helper = 
+	helper = /usr/local/bin/git-credential-manager

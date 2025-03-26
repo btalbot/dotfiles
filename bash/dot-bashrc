@@ -1,20 +1,8 @@
-alias openssl=/usr/local/opt/openssl@1.1/bin/openssl
-alias curl=/usr/local/opt/curl/bin/curl
-#alias emacs='open -a Emacs.app'
-#alias emacsclient=/Applications/Emacs.app/Contents/MacOS/bin/emacsclient
-#alias 6666="ssh -i ~/age/aws-keys/btalbot.pem -o StrictHostKeyChecking=no -o ConnectTimeout=10 -o ServerAliveInterval=60 -N -D 6666 root@ec2-174-129-103-90.compute-1.amazonaws.com"
-alias socat_statsd="socat -u udp-recv:8125 stdout"
-alias utc='TZ=utc date "+%Y-%m-%dT%H:%M:%S.000Z"'
-alias uuid='/usr/local/bin/uuid -v 4'
-alias nemo.aws="AWS_ACCESS_KEY_ID=FakeKey AWS_SECRET_ACCESS_KEY=FakeSecret /usr/local/opt/awscli/bin/aws"
-alias nemo.aws.dynamodb="nemo.aws dynamodb --endpoint http://dynamodb.nemo"
-alias more=less
-alias v='ls -lF'
-alias vv='ls -alF'
-alias d='ls -F'
-alias ll='ls -lF'
-# Find In Files
-alias fif="find . -type f \( -not -path '*/.*/*' -a -not -name '*~' \) -print0 |xargs -0 egrep --color -n"
+# setup homebrew if found
+[ -x /usr/local/bin/brew ] && eval $(/usr/local/bin/brew shellenv)
+[ -x /opt/homebrew/bin/brew ] && eval $(/opt/homebrew/bin/brew shellenv)
+
+DEPOT_DIR=${HOMEBREW_PREFIX:-/usr/local}
 
 IGNOREEOF=10  # Ctl-D 10 times before shell exit
 export HISTSIZE=10000
@@ -22,6 +10,7 @@ export LESS="-eiM --RAW-CONTROL-CHARS --quit-if-one-screen --no-init"
 export PAGER=less
 [ -n "$(which nvim)" ] && export VISUAL=nvim
 export BASH_SILENCE_DEPRECATION_WARNING=1 # https://support.apple.com/en-us/HT208050
+export GPG_TTY=$(tty)
 
 ulimit -n 2048
 
@@ -98,10 +87,27 @@ function aws()
   aws-vault exec ${AWS_PROFILE:-$USER} -- aws "$@"
 }
 
+alias openssl=$DEPOT_DIR/opt/openssl@1.1/bin/openssl
+alias curl=$DEPOT_DIR/opt/curl/bin/curl
+#alias emacs='open -a Emacs.app'
+#alias emacsclient=/Applications/Emacs.app/Contents/MacOS/bin/emacsclient
+#alias 6666="ssh -i ~/age/aws-keys/btalbot.pem -o StrictHostKeyChecking=no -o ConnectTimeout=10 -o ServerAliveInterval=60 -N -D 6666 root@ec2-174-129-103-90.compute-1.amazonaws.com"
+alias socat_statsd="socat -u udp-recv:8125 stdout"
+alias utc='TZ=utc date "+%Y-%m-%dT%H:%M:%S.000Z"'
+alias uuid="$DEPOT_DIR/bin/uuid -v 4"
+alias nemo.aws="AWS_ACCESS_KEY_ID=FakeKey AWS_SECRET_ACCESS_KEY=FakeSecret $DEPOT_DIR/opt/awscli/bin/aws"
+alias nemo.aws.dynamodb="nemo.aws dynamodb --endpoint http://dynamodb.nemo"
+alias more=less
+alias v='ls -lF'
+alias vv='ls -alF'
+alias d='ls -F'
+alias ll='ls -lF'
+# Find In Files
+alias fif="find . -type f \( -not -path '*/.*/*' -a -not -name '*~' \) -print0 |xargs -0 egrep --color -n"
 
 
-if [ -f /usr/local/bin/starship ]; then
-    eval "$(/usr/local/bin/starship init bash)"
+if [ -n "$(which starship)" ]; then
+    eval "$(starship init bash)"
 else
     case $TERM in
         cons25)
@@ -115,7 +121,6 @@ fi
 
 case `uname -s` in
     Darwin)
-    export PATH=/usr/local/bin:/usr/local/sbin:$PATH
     # enable colorized 'ls' output in OSX
     export CLICOLOR=y
     ;;
@@ -126,13 +131,13 @@ case `uname -s` in
 esac
 
 # for rbenv https://github.com/sstephenson/rbenv
-eval "$(rbenv init -)"
+[ -n "$(which rbenv)" ] && eval "$(rbenv init -)"
 
 # for pyenv https://github.com/pyenv/pyenv
-eval "$(pyenv init -)"
+[ -n "$(which pyenv)" ] && eval "$(pyenv init -)"
 
 # for nodenv https://github.com/nodenv/nodenv
-eval "$(nodenv init -)"
+[ -n "$(which nodenv)" ] && eval "$(nodenv init -)"
 
-[ -f /usr/local/etc/bash_completion ] && source /usr/local/etc/bash_completion
+[ -f $DEPOT_DIR/etc/bash_completion ] && source $DEPOT_DIR/etc/bash_completion
 
